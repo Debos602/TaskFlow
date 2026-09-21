@@ -1,75 +1,117 @@
-# React + TypeScript + Vite
+# TaskFlow — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive React frontend for the Project & Task Management Portal. It consumes
+the backend REST API and stores task data in an SQL database (handled by the
+backend).
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Create, read, update, and delete tasks
+- Task fields: Title, Description, Priority (Low/Medium/High),
+  Status (Pending/In Progress/Completed), Created Date
+- Form validation with clear inline error messages
+- Loading states (skeletons + spinners)
+- Success / error toast notifications
+- Delete confirmation modal
+- Empty states
+- Search + status filter
+- Mobile-responsive layout (Tailwind CSS)
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [Node.js](https://nodejs.org/) 20+ (LTS recommended)
+- npm 10+
+- The backend API running (see the backend setup). The app expects the API at
+  `http://localhost:5000/api` by default.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# 1. Install dependencies
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# 2. Configure the API URL (optional)
+#    Copy .env.example to .env and adjust VITE_API_URL if your backend
+#    runs on a different host/port.
+cp .env.example .env
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# 3. Run the dev server
+npm run dev
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+# 4. Open http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Variable        | Description                                  | Default                          |
+| --------------- | -------------------------------------------- | -------------------------------- |
+| `VITE_API_URL` | Base URL of the backend REST API (no trailing slash) | `http://localhost:5000/api` |
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Available Scripts
 
+| Command        | Description                                     |
+| -------------- | ----------------------------------------------- |
+| `npm run dev`  | Start the Vite dev server with hot reload       |
+| `npm run build`| Type-check and build for production             |
+| `npm run lint` | Run ESLint                                      |
+| `npm run preview` | Preview the production build locally          |
+
+## API Contract
+
+The frontend communicates with the backend via these REST endpoints
+(`/tasks` appended to `VITE_API_URL`):
+
+| Method   | Endpoint        | Description          |
+| -------- | --------------- | -------------------- |
+| `GET`    | `/tasks`        | Fetch all tasks      |
+| `POST`   | `/tasks`        | Create a task        |
+| `GET`    | `/tasks/:id`    | Fetch a single task  |
+| `PUT`    | `/tasks/:id`    | Update a task        |
+| `DELETE` | `/tasks/:id`    | Delete a task        |
+
+A task resource looks like:
+
+```json
+{
+  "id": 1,
+  "title": "Set up database",
+  "description": "Create the tasks table",
+  "priority": "High",
+  "status": "InProgress",
+  "createdDate": "2025-01-01T12:00:00.000Z"
+}
+```
+
+## Project Structure
+
+```
+src/
+  App.tsx                 # Root component: state, API calls, routing
+  main.tsx                # React entry point
+  types.ts                # Shared TypeScript types
+  index.css               # Tailwind base + global styles
+  App.css                 # App-scoped styles
+  lib/
+    api.ts                # REST API client (fetch)
+    utils.ts              # Validation schema, color maps, helpers
+  components/
+    TaskCard.tsx          # Single task card
+    TaskList.tsx          # Task grid + empty/loading states
+    TaskForm.tsx          # Create / edit form
+    DeleteConfirmation.tsx # Delete modal
+    ui/
+      Modal.tsx
+      LoadingSpinner.tsx
+      EmptyState.tsx
+      Badge.tsx           # PriorityBadge, StatusBadge
+      Toast.tsx           # Toast notifications
+```
+
+## Running with Docker
+
+A multi-stage Dockerfile is provided for production builds. Build and run:
+
+```bash
+docker build -t taskflow-frontend .
+docker run -p 80:80 -e VITE_API_URL=http://host.docker.internal:5000/api taskflow-frontend
 ```
