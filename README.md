@@ -24,6 +24,7 @@ backend).
 - The backend API running (see the backend setup). The app expects the API at
   `http://localhost:5000/api` by default.
 
+  
 ## Getting Started
 
 ```bash
