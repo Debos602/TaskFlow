@@ -1,4 +1,4 @@
-# TaskFlow — Frontend
+# TaskFlow — Frontend (task-managenent-client)
 
 A responsive React frontend for the Project & Task Management Portal. It consumes
 the backend REST API and stores task data in an SQL database (handled by the
