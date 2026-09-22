@@ -62,13 +62,15 @@ npm run dev
 The frontend communicates with the backend via these REST endpoints
 (`/tasks` appended to `VITE_API_URL`):
 
-| Method   | Endpoint        | Description          |
-| -------- | --------------- | -------------------- |
-| `GET`    | `/tasks`        | Fetch all tasks      |
-| `POST`   | `/tasks`        | Create a task        |
-| `GET`    | `/tasks/:id`    | Fetch a single task  |
-| `PUT`    | `/tasks/:id`    | Update a task        |
-| `DELETE` | `/tasks/:id`    | Delete a task        |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| GET | `/api/v1/tasks` | List tasks with filtering, sorting, and pagination |
+| GET | `/api/v1/tasks/dashboard` | Get dashboard task state |
+| GET | `/api/v1/tasks/:id` | Get one task |
+| POST | `/api/v1/tasks` | Create a task |
+| PUT | `/api/v1/tasks/:id` | Update a task |
+| PATCH | `/api/v1/tasks/:id/move` | Move a task to a status and position |
+| DELETE | `/api/v1/tasks/:id` | Delete a task |
 
 A task resource looks like:
 
